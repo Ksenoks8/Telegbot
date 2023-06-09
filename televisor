@@ -1,0 +1,21 @@
+import telebot
+from telebot import types
+bot = telebot.TeleBot('6181588219:AAG_oEF2eEySPqfLWEqPKaOkqF_O2wydgN0')
+@bot.message_handler(commands=['start'])
+def startBot(message):
+    first_mess = f'<b>{message.from_user.full_name}</b>,Привет!\nХочешь расскажу о алгоритмике?'
+    markup = types.InlineKeyboardMarkup()
+    button_yes  = types.InlineKeyboardButton(text = 'Да',callback_data='yes')
+    markup.add(button_yes)
+    bot.send_message(message.chat.id,first_mess,parse_mode='html',reply_markup=markup)
+@bot.callback_query_handler(func=lambda call:True)
+def response(function_call):
+    if function_call.message and function_call.data == 'yes':
+        second_mess = "Мы самая лучшая школа программирования для детей.Более детально можешь ознакомиться с нами на нашем сайте"
+        markup = types.InlineKeyboardMarkup()
+        markup.add(types.InlineKeyboardButton('Перейти на сайт',url = 'https://algoritmika.org/'))
+        bot.send_message(function_call.message.chat.id,second_mess,reply_markup=markup)
+        bot.answer_callback_query(function_call.id)
+
+
+bot.infinity_polling()
